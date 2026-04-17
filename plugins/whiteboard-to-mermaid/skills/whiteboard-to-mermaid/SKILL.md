@@ -1,0 +1,107 @@
+---
+name: whiteboard-to-mermaid
+description: Convert a whiteboard sequence diagram photo to valid Mermaid sequenceDiagram syntax. Pass the image path as an argument, or attach an image and invoke with no argument.
+argument-hint: <image-path>
+allowed-tools: Read
+---
+
+If `$ARGUMENTS` is provided, read the image file at that path. Otherwise use the most recently attached image in the conversation.
+
+Identify every participant, message, and structural element in the sequence diagram, then emit a valid Mermaid `sequenceDiagram`.
+
+## Mermaid syntax reference
+
+    sequenceDiagram
+        participant A as Alice
+        participant B as Bob
+
+        A->>B: synchronous call (solid filled arrowhead)
+        A-->>B: return / async response (dashed)
+        A-xB: lost message or error (solid + X tip)
+        A--xB: lost return (dashed + X tip)
+        A-)B: async fire-and-forget (solid open arrowhead)
+        A--)B: async open return (dashed open)
+
+        activate B
+        deactivate B
+        A->>+B: call and activate in one line
+        B-->>-A: return and deactivate in one line
+
+        Note right of A: text on right
+        Note left of B: text on left
+        Note over A,B: text spanning both lifelines
+
+        loop Every tick
+            A->>B: ping
+        end
+
+        alt happy path
+            B-->>A: 200 OK
+        else error path
+            B-->>A: 500 Error
+        end
+
+        opt only if needed
+            A->>B: optional call
+        end
+
+        par branch one
+            A->>B: action 1
+        and branch two
+            A->>C: action 2
+        end
+
+        critical must succeed
+            A->>B: important call
+        option fallback
+            A->>C: backup call
+        end
+
+        break on exception
+            A->>A: handle locally
+        end
+
+        autonumber
+
+## Whiteboard → Mermaid mapping
+
+| Whiteboard element | Mermaid |
+|---|---|
+| Box or name at top of a lifeline | `participant Name` |
+| Solid filled arrowhead → | `->>` |
+| Dashed or dotted arrow → | `-->>` |
+| Arrow ending in X | `-x` / `--x` |
+| Half / open arrowhead | `-)` / `--)` |
+| Vertical rectangle on a lifeline | `activate` / `deactivate` (or `+`/`-` shorthand) |
+| Boxed region labeled "loop" | `loop … end` |
+| Boxed region labeled "alt", "if", or "if/else" | `alt … else … end` |
+| Boxed region labeled "opt" | `opt … end` |
+| Boxed region labeled "par" | `par … and … end` |
+| Sticky note or annotation bubble | `Note over A,B: text` |
+| Numbers drawn on arrows | `autonumber` at top |
+| Left-to-right actor order | preserve as-is |
+
+## Ambiguity rules
+
+Resolve silently:
+- Unclear arrow type → use `->>` and note the assumption only if it materially changes meaning
+- Actors inferred from arrow endpoints when no explicit box is drawn
+- Actor order unclear → use left-to-right as they appear in the photo
+- Minor spelling or capitalisation → clean up silently
+
+Mark genuinely unreadable text with `<?text?>` rather than guessing.
+
+Ask the user only when:
+- Arrow direction is ambiguous (can't determine who is calling whom)
+- A structural block's type is genuinely unclear (e.g. loop vs alt)
+
+## Output format
+
+Emit exactly a fenced mermaid code block:
+
+    ```mermaid
+    sequenceDiagram
+        …
+    ```
+
+If you made non-obvious assumptions, add a brief **Assumptions** list below the block. No preamble, no narration.

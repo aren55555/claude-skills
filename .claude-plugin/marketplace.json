@@ -1,0 +1,18 @@
+{
+  "name": "aren55555-skills",
+  "owner": {
+    "name": "Aren",
+    "github": "aren55555"
+  },
+  "metadata": {
+    "description": "Personal Claude Code skills by aren55555",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "whiteboard-to-mermaid",
+      "source": "./plugins/whiteboard-to-mermaid",
+      "description": "Convert a whiteboard sequence diagram photo to valid Mermaid syntax"
+    }
+  ]
+}
