@@ -71,12 +71,13 @@ Identify every participant, message, and structural element in the sequence diag
 | Whiteboard element | Mermaid |
 |---|---|
 | Box or name at top of a lifeline | `participant Name` |
-| Solid filled arrowhead → | `->>` |
-| Dashed or dotted arrow → | `-->>` |
+| Solid line with filled arrowhead → | `->>` |
+| Dashed or dotted line (regardless of arrowhead) | `-->>` |
+| Diagonal solid arrow (drawn at an angle) | `-)` async fire-and-forget |
+| Diagonal dashed arrow (drawn at an angle) | `--)` async open return |
 | Arrow ending in X | `-x` / `--x` |
-| Half / open arrowhead | `-)` / `--)` |
+| Half / open arrowhead on horizontal line | `-)` / `--)` |
 | Vertical rectangle on a lifeline | `activate` / `deactivate` (or `+`/`-` shorthand) |
-| Diagonal arrow (not horizontal) | async message: `-)` (solid) or `--)` (dashed) |
 | Participant with activation box while waiting for an async callback | `activate` on sender after dispatching; `deactivate` when the async reply arrives |
 | Boxed region labeled "loop" | `loop … end` |
 | Boxed region labeled "alt", "if", or "if/else" | `alt … else … end` |
@@ -88,9 +89,10 @@ Identify every participant, message, and structural element in the sequence diag
 
 ## Async patterns
 
-- A **diagonal arrow** (drawn at an angle rather than horizontally) signals an async message. Use `-)` for solid and `--)` for dashed.
-- The **fire-and-forget + callback** pattern: sender dispatches a request and receives an immediate acknowledgement (e.g. an ID), then waits for a later async callback. Model this as: `activate` the sender after the ack, use `--)` for the async callback, then `deactivate` the sender when the callback arrives.
-- A **push notification** is always async (`-)` or `--)`) and deactivates the waiting participant upon receipt.
+- A **diagonal arrow** (drawn at an angle rather than horizontally) always signals async — use `--)` for dashed diagonal, `-)` for solid diagonal. **Never use `-->>` or `->>` for diagonal arrows.**
+- The **fire-and-forget + callback** pattern: sender dispatches, gets an immediate sync ack (solid `->>` return), then waits (`activate`) for a later async callback (`--)`) before deactivating.
+- A **push notification** is always async `-)` (solid diagonal open arrowhead).
+- **Solid line = `->>`, dashed/dotted line = `-->>`**. Check the line style first, then the arrowhead. Return values that travel back on a solid line (e.g. an ID, a JSON payload) use `->>`.
 
 ## Ambiguity rules
 
