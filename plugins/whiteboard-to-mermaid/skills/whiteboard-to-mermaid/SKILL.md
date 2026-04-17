@@ -2,7 +2,6 @@
 name: whiteboard-to-mermaid
 description: Convert a whiteboard sequence diagram photo to valid Mermaid sequenceDiagram syntax. Pass the image path as an argument, or attach an image and invoke with no argument.
 argument-hint: <image-path> [--output <path.mmd>]
-allowed-tools: [Read, Write]
 ---
 
 Parse `$ARGUMENTS` for:
