@@ -1,5 +1,5 @@
 {
   "name": "whiteboard-to-mermaid",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Convert a whiteboard sequence diagram photo to .seq syntax and render to SVG"
 }

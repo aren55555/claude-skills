@@ -2,7 +2,6 @@
 name: preview-seq
 description: Render a .seq diagram file to SVG and open it in Google Chrome for preview.
 argument-hint: <path-to-diagram.seq>
-allowed-tools: Bash(bun *)
 ---
 
 `$ARGUMENTS` is the path to a `.seq` diagram file.
