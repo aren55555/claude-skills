@@ -73,6 +73,8 @@ Identify every participant, message, and structural element in the sequence diag
 | Arrow ending in X | `-x` / `--x` |
 | Half / open arrowhead | `-)` / `--)` |
 | Vertical rectangle on a lifeline | `activate` / `deactivate` (or `+`/`-` shorthand) |
+| Diagonal arrow (not horizontal) | async message: `-)` (solid) or `--)` (dashed) |
+| Participant with activation box while waiting for an async callback | `activate` on sender after dispatching; `deactivate` when the async reply arrives |
 | Boxed region labeled "loop" | `loop … end` |
 | Boxed region labeled "alt", "if", or "if/else" | `alt … else … end` |
 | Boxed region labeled "opt" | `opt … end` |
@@ -80,6 +82,12 @@ Identify every participant, message, and structural element in the sequence diag
 | Sticky note or annotation bubble | `Note over A,B: text` |
 | Numbers drawn on arrows | `autonumber` at top |
 | Left-to-right actor order | preserve as-is |
+
+## Async patterns
+
+- A **diagonal arrow** (drawn at an angle rather than horizontally) signals an async message. Use `-)` for solid and `--)` for dashed.
+- The **fire-and-forget + callback** pattern: sender dispatches a request and receives an immediate acknowledgement (e.g. an ID), then waits for a later async callback. Model this as: `activate` the sender after the ack, use `--)` for the async callback, then `deactivate` the sender when the callback arrives.
+- A **push notification** is always async (`-)` or `--)`) and deactivates the waiting participant upon receipt.
 
 ## Ambiguity rules
 
