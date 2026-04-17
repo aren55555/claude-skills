@@ -1,11 +1,15 @@
 ---
 name: whiteboard-to-mermaid
 description: Convert a whiteboard sequence diagram photo to valid Mermaid sequenceDiagram syntax. Pass the image path as an argument, or attach an image and invoke with no argument.
-argument-hint: <image-path>
-allowed-tools: Read
+argument-hint: <image-path> [--output <path.mmd>]
+allowed-tools: Read, Write
 ---
 
-If `$ARGUMENTS` is provided, read the image file at that path. Otherwise use the most recently attached image in the conversation.
+Parse `$ARGUMENTS` for:
+- `--output <path.mmd>` — if present, extract the output path and strip it from the image path
+- The remaining value is the image path (or absent if only `--output` was given)
+
+If an image path is present, read the file at that path. Otherwise use the most recently attached image in the conversation.
 
 Identify every participant, message, and structural element in the sequence diagram, then emit a valid Mermaid `sequenceDiagram`.
 
@@ -113,3 +117,9 @@ Emit exactly a fenced mermaid code block:
     ```
 
 If you made non-obvious assumptions, add a brief **Assumptions** list below the block. No preamble, no narration.
+
+## Pipe to preview
+
+If `--output <path.mmd>` was provided:
+1. Write the diagram content (without the fenced code block wrapper) to that path using the Write tool.
+2. Invoke the `whiteboard-to-mermaid:preview-mermaid` skill with the output path as the argument.
